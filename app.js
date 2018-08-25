@@ -1,62 +1,32 @@
 const buscador = require('./buscardorDeArquivos')
+const comparador = require('./comparadorDeArquivos')
 
-
-var controllers = [];
-
-
-
-const getControllers = function(pasta){
-
+const getFiles = function(pasta){
     return new Promise((resolve, reject) => {
-       
         buscador.buscador(pasta, function(err, data){
             if(err){
                 reject(err)
             } else {
                 resolve(data)
             }
-           
         });
-
     }) 
 }
-
-const getTestes = function(pasta){
-
-    return new Promise((resolve, reject) => {
-       
-        buscador.buscador(pasta, function(err, data){
-            if(err){
-                reject(err)
-            } else {
-                resolve(data)
-            }
-           
-        });
-
-    }) 
-}
-
-
-
-// getControllers('./src')
-//     .then(arquivos => console.log(arquivos))
-//     .catch(err => console.log(err))
-
-
 
 const promises = [
-    getControllers('./src'),
-    getTestes('./tests')
+    getFiles('./src'),
+    getFiles('./tests')
   ];
 
-
-  Promise.all(promises)
+Promise.all(promises)
     .then(data => {
       let arquivos = data;  
-      console.log("Dados", JSON.stringify(arquivos));
+      //console.log("Dados", JSON.stringify(arquivos));
+      comparador.comprarListas(arquivos[0], arquivos[1])
       return data;
-    });
+    })
+    .catch(err => 
+        console.log("Não consegue né moisés", err));
 
 
 
